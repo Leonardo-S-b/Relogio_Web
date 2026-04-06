@@ -1,0 +1,89 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #f5f7fb;
+	background:
+		radial-gradient(circle at top, rgba(91, 141, 239, 0.45), transparent 35%),
+		radial-gradient(circle at bottom right, rgba(23, 34, 78, 0.9), rgba(8, 12, 24, 1));
+}
+
+.hero {
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+}
+
+.clock-card {
+	width: min(92vw, 560px);
+	padding: 40px 28px;
+	text-align: center;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 24px;
+	background: rgba(10, 16, 32, 0.62);
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+	backdrop-filter: blur(14px);
+}
+
+.eyebrow {
+	margin: 0 0 12px;
+	font-size: 0.78rem;
+	letter-spacing: 0.28em;
+	text-transform: uppercase;
+	color: #8fb4ff;
+}
+
+h1 {
+	margin: 0;
+	font-size: clamp(2rem, 5vw, 3rem);
+	font-weight: 700;
+}
+
+.subtitle {
+	margin: 12px 0 32px;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: rgba(245, 247, 251, 0.78);
+}
+
+.clock {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.12em;
+	font-size: clamp(3rem, 14vw, 7rem);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	font-variant-numeric: tabular-nums;
+	color: #ffffff;
+}
+
+.separator {
+	color: #8fb4ff;
+	animation: blink 1s steps(1, end) infinite;
+}
+
+@keyframes blink {
+	50% {
+		opacity: 0.25;
+	}
+}
+
+@media (max-width: 480px) {
+	.clock-card {
+		padding: 32px 20px;
+		border-radius: 20px;
+	}
+
+	.subtitle {
+		margin-bottom: 24px;
+	}
+}

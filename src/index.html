@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relogio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="hero">
+        <section class="clock-card" aria-labelledby="clock-title">
+            <p class="eyebrow">Projeto GitHub</p>
+            <h1 id="clock-title">Hora Certa</h1>
+           
+
+            <div class="clock" aria-live="polite" aria-atomic="true">
+                <span id="hours">00</span>
+                <span class="separator">:</span>
+                <span id="minutes">00</span>
+                <span class="separator">:</span>
+                <span id="seconds">00</span>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+
+        function pad(value) {
+            return String(value).padStart(2, '0');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            hoursElement.textContent = pad(now.getHours());
+            minutesElement.textContent = pad(now.getMinutes());
+            secondsElement.textContent = pad(now.getSeconds());
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
