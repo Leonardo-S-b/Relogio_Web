@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relogio</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <main class="hero">
         <section class="clock-card" aria-labelledby="clock-title">
             <p class="eyebrow">Projeto GitHub</p>
             <h1 id="clock-title">Hora Certa</h1>
-           
+            <p class="subtitle" id="date-display"></p>
+
 
             <div class="clock" aria-live="polite" aria-atomic="true">
                 <span id="hours">00</span>
@@ -41,6 +44,21 @@
 
         updateClock();
         setInterval(updateClock, 1000);
+
+        const dateElement = document.getElementById('date-display');
+
+        function updateDate() {
+            const now = new Date();
+            dateElement.textContent = now.toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        updateDate();
     </script>
 </body>
+
 </html>
