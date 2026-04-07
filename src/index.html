@@ -15,6 +15,23 @@
             <h1 id="clock-title">Hora Certa</h1>
             <p class="subtitle" id="date-display"></p>
 
+            <!-- Seletor de cidades -->
+            <div class="city-selector">
+                <!-- Label do dropdown -->
+                <label for="city-select">Cidade:</label>
+                <!-- Select com as cidades -->
+                <select id="city-select">
+                    <!-- Cada opção tem um value com o timezone -->
+                    <option value="America/Sao_Paulo">São Paulo 🇧🇷</option>
+                    <option value="America/New_York">Nova York 🇺🇸</option>
+                    <option value="Europe/London">Londres 🇬🇧</option>
+                    <option value="Europe/Paris">Paris 🇫🇷</option>
+                    <option value="Asia/Tokyo">Tóquio 🇯🇵</option>
+                    <option value="Asia/Shanghai">Xangai 🇨🇳</option>
+                    <option value="Australia/Sydney">Sydney 🇦🇺</option>
+                    <option value="Asia/Dubai">Dubai 🇦🇪</option>
+                </select>
+            </div>
 
             <div class="clock" aria-live="polite" aria-atomic="true">
                 <span id="hours">00</span>
@@ -23,41 +40,139 @@
                 <span class="separator">:</span>
                 <span id="seconds">00</span>
             </div>
+            <!-- Mostra a cidade e o fuso horário -->
+            <p class="timezone-info" id="timezone-info"></p>
         </section>
     </main>
 
     <script>
+        // NOVO: Referência ao elemento select para capturar mudanças de cidade
         const hoursElement = document.getElementById('hours');
         const minutesElement = document.getElementById('minutes');
         const secondsElement = document.getElementById('seconds');
+        const dateElement = document.getElementById('date-display');
+        // NOVO: Elemento que exibe informações do fuso horário
+        const timezoneInfo = document.getElementById('timezone-info');
+        // NOVO: Elemento do dropdown de cidades
+        const citySelect = document.getElementById('city-select');
+
+        // NOVO: Variável global para armazenar o fuso horário atualmente selecionado
+        let currentTimezone = 'America/Sao_Paulo';
 
         function pad(value) {
             return String(value).padStart(2, '0');
         }
 
+        // MODIFICADO: Função agora usa o fuso horário selecionado (currentTimezone)
         function updateClock() {
-            const now = new Date();
-            hoursElement.textContent = pad(now.getHours());
-            minutesElement.textContent = pad(now.getMinutes());
-            secondsElement.textContent = pad(now.getSeconds());
+            try {
+                // NOVO: Usa Intl.DateTimeFormat com timeZone para formatar a hora conforme a cidade
+                const formatter = new Intl.DateTimeFormat('pt-BR', {
+                    // NOVO: timeZone - aplica a zona horária selecionada
+                    timeZone: currentTimezone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false // Formato 24h
+                });
+
+                // NOVO: formatToParts retorna array com partes da data/hora
+                const parts = formatter.formatToParts(new Date());
+                // NOVO: Cria um objeto para armazenar os valores de hora/minuto/segundo
+                const timeValues = {};
+                
+                // NOVO: Extrai valores de cada parte (hour, minute, second)
+                parts.forEach(part => {
+                    if (part.type !== 'literal') {
+                        timeValues[part.type] = part.value;
+                    }
+                });
+
+                // NOVO: Atualiza elementos com valores do novo fuso horário
+                hoursElement.textContent = timeValues.hour || '00';
+                minutesElement.textContent = timeValues.minute || '00';
+                secondsElement.textContent = timeValues.second || '00';
+            } catch (e) {
+                // NOVO: Tratamento de erro caso o fuso horário seja inválido
+                console.error('Erro ao atualizar relógio:', e);
+            }
         }
 
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        const dateElement = document.getElementById('date-display');
-
+        // MODIFICADO: Função agora usa o fuso horário selecionado
         function updateDate() {
-            const now = new Date();
-            dateElement.textContent = now.toLocaleDateString('pt-BR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
+            try {
+                // NOVO: Opções para formatar data conforme fuso horário selecionado
+                const options = {
+                    // NOVO: Aplica zona horária à formatação da data
+                    timeZone: currentTimezone,
+                    weekday: 'long',
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                };
+                
+                const date = new Date();
+                // NOVO: Formata a data conforme o fuso horário escolhido
+                dateElement.textContent = date.toLocaleDateString('pt-BR', options);
+            } catch (e) {
+                // NOVO: Tratamento de erro
+                console.error('Erro ao atualizar data:', e);
+            }
         }
 
+        // NOVO FUNÇÃO: Atualiza informações do fuso horário e nome da cidade
+        function updateTimezoneInfo() {
+            // NOVO: Dicionário com nomes completos das cidades
+            const cityNames = {
+                'America/Sao_Paulo': 'São Paulo, Brasil',
+                'America/New_York': 'Nova York, EUA',
+                'Europe/London': 'Londres, Reino Unido',
+                'Europe/Paris': 'Paris, França',
+                'Asia/Tokyo': 'Tóquio, Japão',
+                'Asia/Shanghai': 'Xangai, China',
+                'Australia/Sydney': 'Sydney, Austrália',
+                'Asia/Dubai': 'Dubai, Emirados Árabes'
+            };
+
+            // NOVO: Obtém data atual
+            const now = new Date();
+            // NOVO: Formata para obter o nome curto do fuso horário (ex: BRT, EST, GMT)
+            const formatter = new Intl.DateTimeFormat('pt-BR', {
+                timeZone: currentTimezone,
+                timeZoneName: 'short' // Retorna sigla do fuso (BRT, EST, etc)
+            });
+            
+            // NOVO: Extrai as partes da formatação
+            const parts = formatter.formatToParts(now);
+            // NOVO: Encontra a parte que contém o nome do fuso horário
+            const tzPart = parts.find(p => p.type === 'timeZoneName');
+            // NOVO: Armazena o nome do fuso ou usa o timezone como fallback
+            const tzName = tzPart ? tzPart.value : currentTimezone;
+
+            // NOVO: Exibe nome da cidade, país e fuso horário
+            timezoneInfo.textContent = `${cityNames[currentTimezone]} • ${tzName}`;
+        }
+
+        // NOVO: Event listener ativa quando usuário muda de cidade
+        citySelect.addEventListener('change', (e) => {
+            // NOVO: Atualiza variável de fuso horário com valor selecionado
+            currentTimezone = e.target.value;
+            // NOVO: Atualiza relógio com novo fuso
+            updateClock();
+            // NOVO: Atualiza data com novo fuso
+            updateDate();
+            // NOVO: Atualiza informações do fuso
+            updateTimezoneInfo();
+        });
+
+        // NOVO: Chama função para exibir informações do timezone
+        // Inicializar
+        updateClock();
         updateDate();
+        // NOVO: Inicializa informações do fuso horário
+        updateTimezoneInfo();
+        // Atualiza relógio a cada 1 segundo
+        setInterval(updateClock, 1000);
     </script>
 </body>
 
