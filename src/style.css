@@ -117,3 +117,54 @@ h1 {
 		font-size: 1.75rem;
 	}
 }
+
+
+.city-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 250px;
+    font-family: Arial, sans-serif;
+}
+
+.city-selector label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.city-selector select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none; /* remove estilo padrão */
+}
+
+/* Efeito hover */
+.city-selector select:hover {
+    border-color: #007bff;
+}
+
+/* Quando está selecionado (focus) */
+.city-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* Container com leve destaque */
+.city-selector {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.city-selector {
+    margin: 20px auto 0;
+    align-items: center;
+}
